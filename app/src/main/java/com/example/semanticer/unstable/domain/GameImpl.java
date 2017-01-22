@@ -24,12 +24,11 @@ public class GameImpl implements Game {
 
     private GameImpl(int rowCount, int columnCount) {
 
-        List<List<GameField>> fields = new ArrayList<>();
+        List<List<GameField>> fields = getFields();
 
-        // TODO fill up fields with empty GameFields
-
-        gameBoard = getSampleBoard(); // TODO replace with GameBoard.create(fields);
         playerOnTurn = Player.FIRST_PLAYER;
+
+        gameBoard = GameBoard.create(fields);
     }
 
 
@@ -42,16 +41,33 @@ public class GameImpl implements Game {
         if (!isMovePossible(x, y)) {
             throw new IllegalStateException("Impossible to make move to position x: " + x + " y: " + y);
         }
-        // TODO return new GameBoard after this move
+
+        switch (gameBoard.fields().get(x).get(y).atomCount()){
+            case 1:
+                gameBoard.fields().get(x).set(y, GameField.create(2, playerOnTurn));
+                break;
+            case 2:
+                gameBoard.fields().get(x).set(y, GameField.create(3, playerOnTurn));
+                break;
+            case 3:
+                gameBoard.fields().get(x).set(y, GameField.create(1, playerOnTurn));
+                break;
+            default:
+                gameBoard.fields().get(x).set(y, GameField.create(1, playerOnTurn));
+                break;
+        }
 
         switchPlayerOnTurn();
-        return  getSampleBoard(); // TODO replace with new and CORRECT GameBoard
+        return gameBoard;
     }
 
     @Override
     public boolean isMovePossible(int x, int y) {
         // TODO return if
-        return true;
+
+        if (gameBoard.fields().get(x).get(y).player() == playerOnTurn || gameBoard.fields().get(x).get(y).player() == Player.ANON) return true;
+
+        return false;
     }
 
     @Override
@@ -61,20 +77,14 @@ public class GameImpl implements Game {
 
 
     // TODO remove this example method
-    public GameBoard getSampleBoard() {
-        List<List<GameField>> fields =
-            Arrays.asList(
-                    Arrays.asList(GameField.createBlank(), GameField.createBlank(), GameField.create(3, Player.SECOND_PLAYER), GameField.createBlank()),
-                    Arrays.asList(GameField.create(2, Player.FIRST_PLAYER), GameField.createBlank(), GameField.create(1, Player.SECOND_PLAYER), GameField.createBlank()),
-                    Arrays.asList(GameField.create(3, Player.FIRST_PLAYER), GameField.createBlank(), GameField.createBlank(), GameField.create(1, Player.FIRST_PLAYER)),
-                    Arrays.asList(GameField.create(1, Player.SECOND_PLAYER), GameField.create(1, Player.SECOND_PLAYER), GameField.create(3, Player.SECOND_PLAYER), GameField.createBlank()),
-                    Arrays.asList(GameField.createBlank(), GameField.createBlank(), GameField.createBlank(), GameField.create(2, Player.SECOND_PLAYER)),
-                    Arrays.asList(GameField.createBlank(), GameField.createBlank(), GameField.create(1, Player.SECOND_PLAYER), GameField.createBlank())
-            );
-
-        for (List<GameField> row : fields) {
-            Collections.shuffle(row);
-        }
-        return GameBoard.create(fields);
+    public List<List<GameField>> getFields() {
+        return Arrays.asList(
+                Arrays.asList(GameField.createBlank(), GameField.createBlank(), GameField.createBlank(), GameField.createBlank()),
+                Arrays.asList(GameField.createBlank(), GameField.createBlank(), GameField.createBlank(), GameField.createBlank()),
+                Arrays.asList(GameField.createBlank(), GameField.createBlank(), GameField.createBlank(), GameField.createBlank()),
+                Arrays.asList(GameField.createBlank(), GameField.createBlank(), GameField.createBlank(), GameField.createBlank()),
+                Arrays.asList(GameField.createBlank(), GameField.createBlank(), GameField.createBlank(), GameField.createBlank()),
+                Arrays.asList(GameField.createBlank(), GameField.createBlank(), GameField.createBlank(), GameField.createBlank())
+        );
     }
 }
