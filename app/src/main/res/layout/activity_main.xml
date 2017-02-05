@@ -16,4 +16,42 @@
         android:layout_centerInParent="true"
         android:layout_height="wrap_content" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/currentPlayerTextView" />
+
+    <!--<ProgressBar-->
+        <!--style="?android:attr/progressBarStyleHorizontal"-->
+        <!--android:color="#4696ff"-->
+        <!--android:background="@color/colorPrimary"-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/currentPlayerTextView"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:id="@+id/progressBar" />-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/firstPlayerScore" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/secondPlayerScore" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/winnerTextView" />
+
 </RelativeLayout>

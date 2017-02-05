@@ -23,7 +23,7 @@ public class GameImpl implements Game {
     }
 
     private GameImpl(int rowCount, int columnCount) {
-        playerOnTurn = Player.ANON;
+        playerOnTurn = Player.FIRST_PLAYER;
         gameBoard = GameBoard.create(getFields(rowCount, columnCount));
     }
 
@@ -38,42 +38,50 @@ public class GameImpl implements Game {
             throw new IllegalStateException("Impossible to make move to position x: " + x + " y: " + y);
         }
 
+        GameBoard newGameboard = resolveTurn(x, y);
+
         switchPlayerOnTurn();
 
-        return resolveTurn(x, y);
+        return newGameboard;
     }
 
-    private GameBoard resolveTurn(int x, int y){
-
-        if(gameBoard.fields().get(x).get(y).atomCount() < 3){
-            gameBoard.fields().get(x).set(y, GameField.create(gameBoard.fields().get(x).get(y).atomCount() + 1, playerOnTurn));
-        } else {
-            System.out.println("----------------------------------------------");
-            gameBoard.fields().get(x).set(y, GameField.createBlank());
-            if (x > 0){
-                System.out.println("# x > 0   x: " + x + " y: " + y);
+    private GameBoard resolveTurn(int x, int y) {
+        if (isValidField(x, y)) {
+            if (gameBoard.fields().get(x).get(y).atomCount() < 3) {
+                gameBoard.fields().get(x).set(y, GameField.create(gameBoard.fields().get(x).get(y).atomCount() + 1, playerOnTurn));
+            } else {
+                gameBoard.fields().get(x).set(y, GameField.createBlank());
                 resolveTurn(x - 1, y);
-            }
-            if (x < gameBoard.rows() - 1){
-                System.out.println("# x < " + gameBoard.rows() + "   x: " + x + " y: " + y);
                 resolveTurn(x + 1, y);
-            }
-            if (y > 0) {
-                System.out.println("# y > 0   x: " + x + " y: " + y);
                 resolveTurn(x, y - 1);
-            }
-            if (y < gameBoard.columns() - 1){
-                System.out.println("# y < " + gameBoard.columns() + "   x: " + x + " y: " + y);
                 resolveTurn(x, y + 1);
             }
         }
-
         return gameBoard;
+    }
+
+    public int getPlayerScore(Player player){
+        int index = 0;
+        for (List<GameField> columns : gameBoard.fields()) {
+            for (GameField row : columns) {
+                index += row.player() == player ? row.atomCount() : 0;
+            }
+        }
+        return index;
+    }
+
+    private boolean isValidField(int x, int y) {
+        return x >= 0 && x < gameBoard.rows() && y >= 0 && y < gameBoard.columns();
     }
 
     @Override
     public boolean isMovePossible(int x, int y) {
-        return gameBoard.fields().get(x).get(y).player() != playerOnTurn || gameBoard.fields().get(x).get(y).player() == Player.ANON;
+        return gameBoard.fields().get(x).get(y).player() == playerOnTurn || gameBoard.fields().get(x).get(y).player() == Player.ANON;
+    }
+
+    @Override
+    public boolean canPlay() {
+        return !((getPlayerScore(Player.FIRST_PLAYER) == 0 && getPlayerScore(Player.SECOND_PLAYER) > 1) || (getPlayerScore(Player.SECOND_PLAYER) == 0 && getPlayerScore(Player.FIRST_PLAYER) > 1));
     }
 
     @Override
@@ -92,5 +100,9 @@ public class GameImpl implements Game {
         }
 
         return board;
+    }
+
+    public Player getPlayer() {
+        return playerOnTurn;
     }
 }

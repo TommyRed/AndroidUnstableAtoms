@@ -35,8 +35,6 @@ public class BoardFieldWidget extends View {
         init(gameField, row, column);
     }
 
-
-
     private void init(GameField gameField, int row, int column) {
         this.gameField = gameField;
         this.row = row;
