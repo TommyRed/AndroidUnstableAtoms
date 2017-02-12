@@ -1,4 +1,4 @@
-package com.example.semanticer.unstable.presentation;
+package com.example.semanticer.unstable.presentation.game;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -42,13 +42,13 @@ public class BoardFieldWidget extends View {
         setClickable(true);
         textPaint = new TextPaint();
         textPaint.setTextSize(40);
-        textPaint.setColor(gameField.player() == Player.ANON ? Color.BLACK : gameField.player() == Player.FIRST_PLAYER ? Color.RED : Color.BLUE);
+        textPaint.setColor(gameField.player() == Player.ANON ? Color.LTGRAY : gameField.player() == Player.FIRST_PLAYER ? Color.RED : Color.BLUE);
 
         circlePaint = new Paint();
-        circlePaint.setColor(gameField.player() == Player.ANON ? Color.BLACK : gameField.player() == Player.FIRST_PLAYER ? Color.RED : Color.BLUE);
+        circlePaint.setColor(gameField.player() == Player.ANON ? Color.LTGRAY : gameField.player() == Player.FIRST_PLAYER ? Color.RED : Color.BLUE);
 
         gridPaint = new Paint();
-        gridPaint.setColor(Color.BLACK);
+        gridPaint.setColor(Color.LTGRAY);
 
         int[] attrs = new int[]{R.attr.selectableItemBackground};
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs);

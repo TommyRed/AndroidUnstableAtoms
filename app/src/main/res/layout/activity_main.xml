@@ -8,50 +8,37 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@raw/atom"
     tools:context="com.example.semanticer.unstable.presentation.MainActivity">
 
-    <com.example.semanticer.unstable.presentation.GameBoardLayout
-        android:id="@+id/game_board_layout"
-        android:layout_width="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_height="wrap_content" />
-
     <TextView
+        android:text="Unstable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/title_main"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:id="@+id/currentPlayerTextView" />
+        android:layout_marginTop="97dp"
+        android:textColor="@color/colorAccent"
+        android:textSize="32dp" />
 
-    <!--<ProgressBar-->
-        <!--style="?android:attr/progressBarStyleHorizontal"-->
-        <!--android:color="#4696ff"-->
-        <!--android:background="@color/colorPrimary"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@+id/currentPlayerTextView"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:id="@+id/progressBar" />-->
-
-    <TextView
+    <Button
+        android:text="Single Player"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/firstPlayerScore" />
+        android:id="@+id/btn_singleplayer"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/title_main"
+        android:onClick="startSinglePlayer"/>
 
-    <TextView
+    <Button
+        android:text="Two players"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:id="@+id/secondPlayerScore" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/btn_multiplayer"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/btn_singleplayer"
         android:layout_centerHorizontal="true"
-        android:id="@+id/winnerTextView" />
+        android:onClick="startMultiPlayer"/>
 
 </RelativeLayout>

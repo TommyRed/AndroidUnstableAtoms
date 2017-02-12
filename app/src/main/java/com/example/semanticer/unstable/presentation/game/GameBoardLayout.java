@@ -1,15 +1,10 @@
-package com.example.semanticer.unstable.presentation;
+package com.example.semanticer.unstable.presentation.game;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.GridLayout;
 
-import com.example.semanticer.unstable.R;
 import com.example.semanticer.unstable.domain.model.GameBoard;
-import com.example.semanticer.unstable.domain.model.GameField;
 
 /**
  * Created by semanticer on 15.01.2017.
