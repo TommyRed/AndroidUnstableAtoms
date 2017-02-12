@@ -27,7 +27,7 @@ public class Ai {
 //        List<GameBoard> possibleTurns = getPossibleTurns(game);
 //
 //        return getBestValue(possibleTurns, game);
-        return randomTurn(game.getBoard(), game);
+        return game.canPlay() ? randomTurn(game.getBoard(), game) : game.getBoard();
 
     }
 
