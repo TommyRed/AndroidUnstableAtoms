@@ -15,5 +15,5 @@ public interface Game {
     int getPlayerScore(Player player);
     int getPlayerScore(Player player, GameBoard board);
     boolean canPlay();
-    GameBoard resolveTurn(int x, int y);
+    GameBoard resolveTurn(int x, int y, GameBoard board);
 }

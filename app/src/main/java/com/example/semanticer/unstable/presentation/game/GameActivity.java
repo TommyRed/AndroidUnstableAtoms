@@ -10,6 +10,8 @@ import com.example.semanticer.unstable.R;
 import com.example.semanticer.unstable.domain.Game;
 import com.example.semanticer.unstable.domain.model.GameBoard;
 import com.example.semanticer.unstable.domain.model.Player;
+import com.example.semanticer.unstable.presentation.MainActivity;
+import com.example.semanticer.unstable.presentation.result.ResultActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,7 +85,13 @@ public class GameActivity extends NucleusActivity<GamePresenter> implements Game
 
     @Override
     public void showWinner(Player player) {
-        winnerTextView.setText(player == Player.SECOND_PLAYER ? "Vyhrál : Player 2" : "Vyhrál : Player 1");
+
+//        winnerTextView.setText(player == Player.SECOND_PLAYER ? "Vyhrál : BLUE" : "Vyhrál : RED");
+
+
+        Intent intent = new Intent(this, ResultActivity.class);
+        intent.putExtra("winner", player == Player.SECOND_PLAYER ? "Vyhrál : Player 2" : "Vyhrál : Player 1");
+        startActivity(intent);
     }
 
     @Override

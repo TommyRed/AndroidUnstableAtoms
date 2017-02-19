@@ -1,16 +1,11 @@
 package com.example.semanticer.unstable.domain;
 
-import android.widget.Toast;
-
 import com.example.semanticer.unstable.domain.ai.Ai;
 import com.example.semanticer.unstable.domain.model.GameBoard;
 import com.example.semanticer.unstable.domain.model.GameField;
 import com.example.semanticer.unstable.domain.model.Player;
-import com.example.semanticer.unstable.presentation.MainActivity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,12 +18,16 @@ public class GameImpl implements Game {
     private Player playerOnTurn;
 
     public static GameImpl createNew(int rowCount, int columnCount) {
-        return new GameImpl(rowCount, columnCount);
+        return new GameImpl(Player.FIRST_PLAYER, GameBoard.create(getFields(rowCount, columnCount)));
     }
 
-    private GameImpl(int rowCount, int columnCount) {
-        this.playerOnTurn = Player.FIRST_PLAYER;
-        gameBoard = GameBoard.create(getFields(rowCount, columnCount));
+    public static GameImpl cloneGame(GameImpl another){
+        return new GameImpl(another.getPlayer(), another.getBoard());
+    }
+
+    private GameImpl(Player player, GameBoard board) {
+        this.playerOnTurn = player;
+        gameBoard = board;
     }
 
     private void switchPlayerOnTurn() {
@@ -42,7 +41,7 @@ public class GameImpl implements Game {
 
     private GameBoard aiTurn(int x, int y){
 
-        this.gameBoard = resolveTurn(x, y);
+        this.gameBoard = resolveTurn(x, y, gameBoard);
 
         switchPlayerOnTurn();
 
@@ -55,30 +54,30 @@ public class GameImpl implements Game {
 
     private GameBoard playerTurn(int x, int y){
 
-        GameBoard newGameboard = resolveTurn(x, y);
+        GameBoard newGameboard = resolveTurn(x, y, gameBoard);
 
         switchPlayerOnTurn();
 
         return newGameboard;
     }
 
-    public GameBoard resolveTurn(int x, int y) {
+    public GameBoard resolveTurn(int x, int y, GameBoard board) {
         if (isValidField(x, y)) {
-            if (gameBoard.fields().get(x).get(y).atomCount() < 3) {
-                gameBoard.fields().get(x).set(y, GameField.create(gameBoard.fields().get(x).get(y).atomCount() + 1, playerOnTurn));
+            if (board.fields().get(x).get(y).atomCount() < 3) {
+                board.fields().get(x).set(y, GameField.create(board.fields().get(x).get(y).atomCount() + 1, playerOnTurn));
             } else {
-                splashCell(x, y);
+                splashCell(x, y, board);
             }
         }
-        return gameBoard;
+        return board;
     }
 
-    private void splashCell(int x, int y){
+    private void splashCell(int x, int y, GameBoard board){
         gameBoard.fields().get(x).set(y, GameField.createBlank());
-        resolveTurn(x - 1, y);
-        resolveTurn(x + 1, y);
-        resolveTurn(x, y - 1);
-        resolveTurn(x, y + 1);
+        resolveTurn(x - 1, y, board);
+        resolveTurn(x + 1, y, board);
+        resolveTurn(x, y - 1, board);
+        resolveTurn(x, y + 1, board);
     }
 
     @Override
@@ -117,7 +116,7 @@ public class GameImpl implements Game {
         return gameBoard;
     }
 
-    private List<List<GameField>> getFields(int rows, int columns) {
+    private static List<List<GameField>> getFields(int rows, int columns) {
         List<List<GameField>> board = new ArrayList<>();
 
         for (int i = 0; i < rows; i++) {

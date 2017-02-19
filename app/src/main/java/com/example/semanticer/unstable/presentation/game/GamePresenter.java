@@ -22,27 +22,42 @@ public class GamePresenter extends RxPresenter<GameView> {
         super.onCreate(savedState);
         game = GameImpl.createNew(6, 4);
 
-        view().subscribe(view -> view.showGameBoard(game.getBoard()));
-
-        view().subscribe(view -> view.showPlayer(Player.FIRST_PLAYER));
-        view().subscribe(view -> view.showScore(Player.FIRST_PLAYER, Player.SECOND_PLAYER, game));
+        view().subscribe(view -> {
+            if (view != null) {
+                view.showGameBoard(game.getBoard());
+                view.showPlayer(Player.FIRST_PLAYER);
+                view.showScore(Player.FIRST_PLAYER, Player.SECOND_PLAYER, game);
+            }
+        });
     }
 
     public void onMoveMade(int x, int y, boolean mode) {
         if (game.canPlay()) {
-            if (!game.isMovePossible(x, y)){
-                view().subscribe(view -> view.warn("You can't play here, try again!"));
-            } else{
+            if (!game.isMovePossible(x, y)) {
+                view().subscribe(view -> {
+                            if (view != null) {
+                                view.warn("You can't play here, try again!");
+                            }
+                        }
+                );
+            } else {
                 GameBoard newGameBoard = game.onMoveMade(x, y, mode);
 
-                view().subscribe(view -> view.showGameBoard(newGameBoard));
-                view().subscribe(view -> view.showPlayer(game.getPlayer()));
-                view().subscribe(view -> view.showScore(Player.FIRST_PLAYER, Player.SECOND_PLAYER, game));
-                view().subscribe(view -> view.calculateProgress(Player.FIRST_PLAYER, Player.SECOND_PLAYER, game));
+                view().subscribe(view -> {
+                    if (view != null) {
+                        view.showGameBoard(newGameBoard);
+                        view.showPlayer(game.getPlayer());
+                        view.showScore(Player.FIRST_PLAYER, Player.SECOND_PLAYER, game);
+                        view.calculateProgress(Player.FIRST_PLAYER, Player.SECOND_PLAYER, game);
+                    }
+                });
 
                 if (!game.canPlay()) {
-                    view().subscribe(view -> view.showWinner(game.getPlayerScore(Player.FIRST_PLAYER) > 0 ? Player.FIRST_PLAYER : Player.SECOND_PLAYER));
-                    view().subscribe(view -> view.showPlayer(null));
+                    view().subscribe(view -> {
+                        if (view != null) {
+                            view.showWinner(game.getPlayerScore(Player.FIRST_PLAYER) > 0 ? Player.FIRST_PLAYER : Player.SECOND_PLAYER);
+                        }
+                    });
                 }
             }
         }

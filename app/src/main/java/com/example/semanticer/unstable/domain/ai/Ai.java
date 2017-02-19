@@ -1,8 +1,8 @@
 package com.example.semanticer.unstable.domain.ai;
 
 import com.example.semanticer.unstable.domain.Game;
+import com.example.semanticer.unstable.domain.GameImpl;
 import com.example.semanticer.unstable.domain.model.GameBoard;
-import com.example.semanticer.unstable.domain.model.GameField;
 import com.example.semanticer.unstable.domain.model.Player;
 
 import java.util.ArrayList;
@@ -25,18 +25,37 @@ public class Ai {
             throw new IllegalArgumentException("Gameboard can't be empty!");
 
 //        List<GameBoard> possibleTurns = getPossibleTurns(game);
-//
-//        return getBestValue(possibleTurns, game);
-        return game.canPlay() ? randomTurn(game.getBoard(), game) : game.getBoard();
+
+        return getBestValue(getPossibleTurns(game.getBoard(), game), game);
+//        return game.canPlay() ? makeTurn(game.getBoard(), game) : game.getBoard();
 
     }
 
-    private static GameBoard randomTurn(GameBoard board, Game game){
+    private static GameBoard makeTurn(GameBoard board, Game game){
+        for (int x = 0; x < game.getBoard().rows(); x++) {
+            for (int y = 0; y < game.getBoard().columns(); y++) {
+                if (board.fields().get(x).get(y).player() == game.getPlayer()){
+//                    if (board.fields().get(x).get(y).atomCount() == 3){
+//                        return game.resolveTurn(x, y, board);
+//                    }else if (board.fields().get(x).get(y).atomCount() == 2){
+//                        return game.resolveTurn(x, y, board);
+//                    }else if (board.fields().get(x).get(y).atomCount() == 1){
+//                        return game.resolveTurn(x, y, board);
+//                    }
+
+                    return game.resolveTurn(x, y, board);
+                }
+            }
+        }
+        return randomTurn(board, game);
+    }
+
+    private static GameBoard randomTurn(GameBoard board, Game game) {
 
         int x = new Random().nextInt(board.rows());
         int y = new Random().nextInt(board.columns());
 
-        return game.isMovePossible(x, y) ? game.resolveTurn(x, y) : randomTurn(board, game);
+        return game.isMovePossible(x, y) ? game.resolveTurn(x, y, board) : randomTurn(board, game);
     }
 
     private static GameBoard getBestValue(List<GameBoard> arr, Game game) {
@@ -44,36 +63,51 @@ public class Ai {
         if (arr.isEmpty())
             throw new IllegalArgumentException("List of possible solutions can't be empty!");
 
-        GameBoard bestValue = null;
+        GameBoard bestValue = game.getBoard();
         Player player = game.getPlayer();
 
         for (GameBoard gameBoard : arr) {
 
-            if (bestValue == null) bestValue = gameBoard;
+            System.out.println(game.getPlayerScore(player, gameBoard));
 
-            System.out.println("#   Best score : " + game.getPlayerScore(player, bestValue));
+            if (game.getPlayerScore(player, bestValue) < game.getPlayerScore(player, gameBoard))
+                bestValue = gameBoard;
 
-            bestValue = game.getPlayerScore(player, bestValue) < game.getPlayerScore(player, gameBoard)
-                    ? gameBoard
-                    : bestValue;
+//            bestValue = game.getPlayerScore(player, bestValue) < game.getPlayerScore(player, gameBoard)
+//                    ? gameBoard : bestValue;
         }
 
         return bestValue;
     }
 
-    private static List<GameBoard> getPossibleTurns(Game game) {
+    private static List<GameBoard> getPossibleTurns(GameBoard board, Game game) {
 
         List<GameBoard> possibleTurns = new ArrayList<>();
 
         for (int x = 0; x < game.getBoard().rows(); x++) {
             for (int y = 0; y < game.getBoard().columns(); y++) {
-                if (game.isMovePossible(x, y)) {
-                    System.out.println("Adding x : " + x + " y : " + y + " to possible turns");
-                    possibleTurns.add(game.resolveTurn(x, y));
-                    System.out.println("@   " + game.getPlayerScore(Player.SECOND_PLAYER, game.resolveTurn(x, y)));
+                if (board.fields().get(x).get(y).player() == game.getPlayer()){
+//                    if (board.fields().get(x).get(y).atomCount() == 3){
+//                        return game.resolveTurn(x, y, board);
+//                    }else if (board.fields().get(x).get(y).atomCount() == 2){
+//                        return game.resolveTurn(x, y, board);
+//                    }else if (board.fields().get(x).get(y).atomCount() == 1){
+//                        return game.resolveTurn(x, y, board);
+//                    }
+
+//                    System.out.println("befoooooooooooooor copy and fok " + game.getPlayerScore(game.getPlayer(), board));
+
+                    Game copy = GameImpl.cloneGame((GameImpl) game);
+
+                    possibleTurns.add(copy.resolveTurn(x, y, board));
+
+                    System.out.println("after copy and fok " + game.getPlayerScore(game.getPlayer(), game.resolveTurn(x, y, board)));
                 }
             }
         }
+
+        if (possibleTurns.isEmpty())
+            possibleTurns.add(randomTurn(board, game));
 
         return possibleTurns;
     }
