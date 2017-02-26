@@ -15,19 +15,22 @@ import java.util.List;
 public class GameImpl implements Game {
 
     private GameBoard gameBoard;
+    // TODO later can be reused with List<GameBoard>
+    private List<String> history;
     private Player playerOnTurn;
 
     public static GameImpl createNew(int rowCount, int columnCount) {
-        return new GameImpl(Player.FIRST_PLAYER, GameBoard.create(getFields(rowCount, columnCount)));
+        return new GameImpl(Player.FIRST_PLAYER, GameBoard.create(getFields(rowCount, columnCount)), new ArrayList<>());
     }
 
-    public static GameImpl cloneGame(GameImpl another){
-        return new GameImpl(another.getPlayer(), another.getBoard());
+    public static GameImpl cloneGame(GameImpl another) {
+        return new GameImpl(another.getPlayer(), another.getBoard(), another.getHistory());
     }
 
-    private GameImpl(Player player, GameBoard board) {
+    private GameImpl(Player player, GameBoard board, List<String> history) {
         this.playerOnTurn = player;
         gameBoard = board;
+        this.history = history;
     }
 
     private void switchPlayerOnTurn() {
@@ -36,10 +39,21 @@ public class GameImpl implements Game {
 
     @Override
     public GameBoard onMoveMade(int x, int y, boolean mode) {
-        return isMovePossible(x, y) ? (mode ? playerTurn(x, y) : aiTurn(x, y)) : gameBoard;
+        if (isMovePossible(x, y)) {
+            GameBoard board = mode ? playerTurn(x, y) : aiTurn(x, y);
+            System.out.println(getPlayerScore(playerOnTurn));
+            history.add(
+                    "RED - " + getPlayerScore(Player.FIRST_PLAYER)
+                            + " | BLUE - " + getPlayerScore(Player.SECOND_PLAYER)
+            );
+            return board;
+        } else {
+            return gameBoard;
+        }
+//        return isMovePossible(x, y) ? (mode ? playerTurn(x, y) : aiTurn(x, y)) : gameBoard;
     }
 
-    private GameBoard aiTurn(int x, int y){
+    private GameBoard aiTurn(int x, int y) {
 
         this.gameBoard = resolveTurn(x, y, gameBoard);
 
@@ -52,7 +66,7 @@ public class GameImpl implements Game {
         return gameBoard;
     }
 
-    private GameBoard playerTurn(int x, int y){
+    private GameBoard playerTurn(int x, int y) {
 
         GameBoard newGameboard = resolveTurn(x, y, gameBoard);
 
@@ -72,7 +86,7 @@ public class GameImpl implements Game {
         return board;
     }
 
-    private void splashCell(int x, int y, GameBoard board){
+    private void splashCell(int x, int y, GameBoard board) {
         gameBoard.fields().get(x).set(y, GameField.createBlank());
         resolveTurn(x - 1, y, board);
         resolveTurn(x + 1, y, board);
@@ -81,7 +95,7 @@ public class GameImpl implements Game {
     }
 
     @Override
-    public int getPlayerScore(Player player, GameBoard board){
+    public int getPlayerScore(Player player, GameBoard board) {
         int index = 0;
         for (List<GameField> columns : board.fields()) {
             for (GameField row : columns) {
@@ -92,7 +106,7 @@ public class GameImpl implements Game {
     }
 
     @Override
-    public int getPlayerScore(Player player){
+    public int getPlayerScore(Player player) {
         return getPlayerScore(player, gameBoard);
     }
 
@@ -127,6 +141,12 @@ public class GameImpl implements Game {
         }
 
         return board;
+    }
+
+    @Override
+    // TODO later can be reused with List<GameBoard>
+    public List<String> getHistory() {
+        return history;
     }
 
     @Override

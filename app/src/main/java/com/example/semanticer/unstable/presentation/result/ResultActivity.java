@@ -2,11 +2,16 @@ package com.example.semanticer.unstable.presentation.result;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.semanticer.unstable.R;
 import com.example.semanticer.unstable.presentation.MainActivity;
+import com.example.semanticer.unstable.presentation.utils.Adapter;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,8 +25,14 @@ import nucleus.view.NucleusActivity;
 @RequiresPresenter(ResultPresenter.class)
 public class ResultActivity extends NucleusActivity<ResultPresenter> implements ResultView{
 
-    @BindView(R.id.resultTextView)
-    TextView winnerTextView;
+//    @BindView(R.id.resultTextView)
+//    TextView winnerTextView;
+
+    @BindView(R.id.my_recycler_view)
+    RecyclerView recyclerView;
+
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +40,15 @@ public class ResultActivity extends NucleusActivity<ResultPresenter> implements 
         setContentView(R.layout.activity_result);
         ButterKnife.bind(this);
 
-        String winner = getIntent().getStringExtra("winner");
+        List<String> gameHistory = getIntent().getStringArrayListExtra("history");
 
-        winnerTextView.setText(winner);
+        recyclerView.setHasFixedSize(true);
+
+        mLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        mAdapter = new Adapter(gameHistory);
+        recyclerView.setAdapter(mAdapter);
     }
 
 

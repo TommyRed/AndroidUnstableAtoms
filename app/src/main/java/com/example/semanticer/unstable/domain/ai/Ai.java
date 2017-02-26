@@ -26,8 +26,8 @@ public class Ai {
 
 //        List<GameBoard> possibleTurns = getPossibleTurns(game);
 
-        return getBestValue(getPossibleTurns(game.getBoard(), game), game);
-//        return game.canPlay() ? makeTurn(game.getBoard(), game) : game.getBoard();
+//        return getBestValue(getPossibleTurns(game.getBoard(), game), game);
+        return game.canPlay() ? makeTurn(game.getBoard(), game) : game.getBoard();
 
     }
 
@@ -35,13 +35,13 @@ public class Ai {
         for (int x = 0; x < game.getBoard().rows(); x++) {
             for (int y = 0; y < game.getBoard().columns(); y++) {
                 if (board.fields().get(x).get(y).player() == game.getPlayer()){
-//                    if (board.fields().get(x).get(y).atomCount() == 3){
-//                        return game.resolveTurn(x, y, board);
-//                    }else if (board.fields().get(x).get(y).atomCount() == 2){
-//                        return game.resolveTurn(x, y, board);
-//                    }else if (board.fields().get(x).get(y).atomCount() == 1){
-//                        return game.resolveTurn(x, y, board);
-//                    }
+                    if (board.fields().get(x).get(y).atomCount() == 3){
+                        return game.resolveTurn(x, y, board);
+                    }else if (board.fields().get(x).get(y).atomCount() == 2){
+                        return game.resolveTurn(x, y, board);
+                    }else if (board.fields().get(x).get(y).atomCount() == 1){
+                        return game.resolveTurn(x, y, board);
+                    }
 
                     return game.resolveTurn(x, y, board);
                 }

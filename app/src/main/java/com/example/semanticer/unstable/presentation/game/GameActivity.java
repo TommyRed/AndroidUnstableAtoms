@@ -13,6 +13,10 @@ import com.example.semanticer.unstable.domain.model.Player;
 import com.example.semanticer.unstable.presentation.MainActivity;
 import com.example.semanticer.unstable.presentation.result.ResultActivity;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import nucleus.factory.RequiresPresenter;
@@ -84,13 +88,12 @@ public class GameActivity extends NucleusActivity<GamePresenter> implements Game
     }
 
     @Override
-    public void showWinner(Player player) {
-
-//        winnerTextView.setText(player == Player.SECOND_PLAYER ? "Vyhrál : BLUE" : "Vyhrál : RED");
-
+    public void showWinner(Player player, Game game) {
+        List<String> gameHistory = game.getHistory();
 
         Intent intent = new Intent(this, ResultActivity.class);
         intent.putExtra("winner", player == Player.SECOND_PLAYER ? "Vyhrál : Player 2" : "Vyhrál : Player 1");
+        intent.putStringArrayListExtra("history", (ArrayList<String>) gameHistory);
         startActivity(intent);
     }
 

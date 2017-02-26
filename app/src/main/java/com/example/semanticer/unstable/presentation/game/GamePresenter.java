@@ -55,7 +55,7 @@ public class GamePresenter extends RxPresenter<GameView> {
                 if (!game.canPlay()) {
                     view().subscribe(view -> {
                         if (view != null) {
-                            view.showWinner(game.getPlayerScore(Player.FIRST_PLAYER) > 0 ? Player.FIRST_PLAYER : Player.SECOND_PLAYER);
+                            view.showWinner(game.getPlayerScore(Player.FIRST_PLAYER) > 0 ? Player.FIRST_PLAYER : Player.SECOND_PLAYER, game);
                         }
                     });
                 }

@@ -12,7 +12,7 @@ public interface GameView {
     void showGameBoard(GameBoard gameBoard);
     void showPlayer(Player player);
     void showScore(Player firstPlayer, Player secondPlayer, Game game);
-    void showWinner(Player player);
+    void showWinner(Player player, Game game);
     void calculateProgress(Player player1, Player player2, Game game);
     void warn(String message);
 }
